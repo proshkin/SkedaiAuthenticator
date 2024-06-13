@@ -1,4 +1,4 @@
-name: Authenticator Build
+name: Windows Authenticator Build
 
 on: [push]
 
