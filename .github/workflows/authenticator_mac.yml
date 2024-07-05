@@ -20,7 +20,10 @@ jobs:
       - name: Build executable
         run: pkg authenticator.js --targets latest-macos-x64 --output authenticator
 
-      - name: Upload userServer_mac as artifact
+      - name: Make executable runnable
+        run: chmod +x ./authenticator
+
+      - name: Upload authenticator_mac as artifact
         uses: actions/upload-artifact@v4
         with:
           name: authenticator_mac0.0.1
