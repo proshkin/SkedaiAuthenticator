@@ -23,6 +23,10 @@ jobs:
       - name: Make executable runnable
         run: chmod +x ./authenticator
 
+      - name: Test-run the executable
+        run: |
+          ./authenticator | tee output.log || exit 1
+
       - name: Upload authenticator_mac as artifact
         uses: actions/upload-artifact@v4
         with:
