@@ -13,6 +13,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.11.0'
+
+      - name: Install everything else
+        run: npm install
       
       - name: Install pkg
         run: npm install -g pkg
