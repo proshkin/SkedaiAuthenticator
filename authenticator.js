@@ -8,7 +8,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const fs = require('fs');
-const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const { BrowserWindow, app } = require('electron');
 const { exec } = require('child_process');
