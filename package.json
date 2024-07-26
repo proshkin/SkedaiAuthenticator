@@ -24,7 +24,17 @@
       ]
     },
     "mac": {
-      "target": "dmg"
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "extraFiles": [
+        {
+          "from": "node_modules/ffmpeg-static/ffmpeg",
+          "to": "ffmpeg",
+          "filter": ["**/*"]
+        }
+      ]
     },
     "directories": {
       "output": "build"
