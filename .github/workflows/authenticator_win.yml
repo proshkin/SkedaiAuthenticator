@@ -17,6 +17,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install ffmpeg
+        run: npm install ffmpeg-static --save
+
       - name: Build executable
         run: npm run dist
 
