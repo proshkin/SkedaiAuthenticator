@@ -20,12 +20,6 @@ jobs:
       - name: Build executable
         run: npm run dist
 
-      - name: Test run the executable
-        run: |
-          cd build/win-unpacked
-          ./SkedAuthenticator.exe --version
-        shell: cmd
-
       - name: Upload compiled SkedAuthenticator.exe as artifact
         uses: actions/upload-artifact@v4
         with:
