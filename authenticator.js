@@ -1,3 +1,12 @@
+const ffmpeg = require('ffmpeg-static');
+const path = require('path');
+
+if (process.env.NODE_ENV === 'production') {
+  process.env.FFMPEG_PATH = path.join(process.resourcesPath, 'ffmpeg.exe');
+} else {
+  process.env.FFMPEG_PATH = ffmpeg;
+}
+
 const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
