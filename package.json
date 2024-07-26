@@ -17,8 +17,8 @@
       ],
       "extraFiles": [
         {
-          "from": "node_modules/ffmpeg-static/ffmpeg.exe",
-          "to": "ffmpeg.exe",
+          "from": "node_modules/ffmpeg-static",
+          "to": ".",
           "filter": ["**/*"]
         }
       ]
