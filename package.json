@@ -1,51 +1,34 @@
 {
-  "name": "authenticator",
-  "version": "0.0.1",
-  "main": "authenticator.js",
-  "scripts": {
-    "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "release": "electron-builder"
-  },
-  "build": {
-    "appId": "com.authenticator.scheduler.skedai",
-    "productName": "SkedAuthenticator",
-    "win": {
-      "target": [
-        "portable"
-      ],
-      "extraFiles": [
-        {
-          "from": "node_modules/ffmpeg-static",
-          "to": ".",
-          "filter": ["**/*"]
-        }
-      ]
+    "name": "authenticator",
+    "version": "0.0.1",
+    "main": "authenticator.js",
+    "scripts": {
+      "start": "electron .",
+      "pack": "electron-builder --dir",
+      "dist": "electron-builder",
+      "release": "electron-builder"
     },
-    "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ],
-      "extraFiles": [
-        {
-          "from": "node_modules/ffmpeg-static/ffmpeg",
-          "to": "ffmpeg",
-          "filter": ["**/*"]
-        }
-      ]
+    "build": {
+      "appId": "com.authenticator.scheduler.skedai",
+      "productName": "SkedAuthenticator",
+      "win": {
+        "target": "portable"
+      },
+      "mac": {
+        "target": "dmg"
+      },
+      "directories": {
+        "output": "build"
+      }
     },
-    "directories": {
-      "output": "build"
+    "devDependencies": {
+      "electron": "^27.0.2",
+      "electron-builder": "^24.6.4"
+    },
+    "dependencies": {
+      "@supabase/supabase-js": "^2.38.4",
+      "fs": "^0.0.1-security",
+      "path": "^0.12.7"
     }
-  },
-  "devDependencies": {
-    "electron": "^27.0.2",
-    "electron-builder": "^24.6.4"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.38.4",
-    "ffmpeg-static": "^4.4.0"
   }
-}
+  
