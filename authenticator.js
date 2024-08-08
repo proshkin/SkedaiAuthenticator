@@ -1,17 +1,8 @@
-const ffmpeg = require('ffmpeg-static');
-const path = require('path');
-
-if (process.env.NODE_ENV === 'production') {
-  process.env.FFMPEG_PATH = path.join(process.resourcesPath, 'ffmpeg.exe');
-} else {
-  process.env.FFMPEG_PATH = ffmpeg;
-}
-
 const fs = require('fs');
+const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const { BrowserWindow, app } = require('electron');
 const { exec } = require('child_process');
-
 
 const supabaseUrl = 'https://jfcurpgmlzlceotuthat.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmY3VycGdtbHpsY2VvdHV0aGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDUwODQ4ODksImV4cCI6MjAyMDY2MDg4OX0.7rAa3V9obXlEhewdRah4unY0apsEPHWEYXk5OwKYkLI';
