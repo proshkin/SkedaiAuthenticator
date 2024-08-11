@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '20.11.0'
 
@@ -23,32 +23,31 @@ jobs:
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: Upload Windows build artifacts
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: SkedAuthenticator-0.0.1-windows
           path: build/SkedAuthenticator 0.0.1.exe
       
       - name: Upload macOS DMG
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: SkedAuthenticator-macos-dmg
           path: build/SkedAuthenticator-0.0.1-arm64.dmg
 
       - name: Upload Linux AppImage
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: SkedAuthenticator-linux-AppImage
           path: build/SkedAuthenticator-0.0.1.AppImage
       
       - name: Upload Linux Snap Package
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: SkedAuthenticator-linux-snap
           path: build/authenticator_0.0.1_amd64.snap
