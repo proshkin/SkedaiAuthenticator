@@ -12,41 +12,30 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: '20.11.0'
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: Upload Windows build artifacts
-        if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: electron-app-windows
-          path: dist/win-unpacked/
-      
-      - name: Upload macOS build artifacts
+      # List the build directory for macOS
+      - name: List macOS build directory
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: electron-app-macos
-          path: dist/mac/
-      
-      - name: Upload Linux build artifacts
+        run: ls -R dist/mac || true
+
+      # List the build directory for Windows
+      - name: List Windows build directory
+        if: matrix.os == 'windows-latest'
+        run: dir dist\win-unpacked || echo "Directory not found"
+
+      # List the build directory for Linux
+      - name: List Linux build directory
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: electron-app-linux
-          path: dist/linux-unpacked/
+        run: ls -R dist/linux-unpacked || true
