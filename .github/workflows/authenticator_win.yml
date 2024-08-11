@@ -17,14 +17,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install ffmpeg
-        run: npm install ffmpeg-static --save
-
-      - name: Build executable
+      - name: Build
         run: npm run dist
 
       - name: Upload compiled SkedAuthenticator.exe as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SkedAuthenticator_win0.0.1
+          name: SkedAuthenticator_win_0.0.1
           path: build/win-unpacked/SkedAuthenticator.exe
