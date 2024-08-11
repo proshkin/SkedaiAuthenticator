@@ -25,11 +25,30 @@ jobs:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      # List all files in the dist directory for each platform
-      - name: List all files in dist directory (Windows)
+      - name: Upload Windows build artifacts
         if: matrix.os == 'windows-latest'
-        run: dir dist\ /s
+        uses: actions/upload-artifact@v2
+        with:
+          name: SkedAuthenticator-0.0.1-windows
+          path: build/SkedAuthenticator 0.0.1.exe
+      
+      - name: Upload macOS DMG
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: SkedAuthenticator-macos-dmg
+          path: build/SkedAuthenticator-0.0.1-arm64.dmg
 
-      - name: List all files in dist directory (macOS/Linux)
-        if: matrix.os != 'windows-latest'
-        run: ls -R dist/ || true
+      - name: Upload Linux AppImage
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: SkedAuthenticator-linux-AppImage
+          path: build/SkedAuthenticator-0.0.1.AppImage
+      
+      - name: Upload Linux Snap Package
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: SkedAuthenticator-linux-snap
+          path: build/authenticator_0.0.1_amd64.snap
