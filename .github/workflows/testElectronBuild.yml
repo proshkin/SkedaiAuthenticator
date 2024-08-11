@@ -25,17 +25,11 @@ jobs:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      # List the build directory for macOS
-      - name: List macOS build directory
-        if: matrix.os == 'macos-latest'
-        run: ls -R dist/mac || true
-
-      # List the build directory for Windows
-      - name: List Windows build directory
+      # List all files in the dist directory for each platform
+      - name: List all files in dist directory (Windows)
         if: matrix.os == 'windows-latest'
-        run: dir dist\win-unpacked || echo "Directory not found"
+        run: dir dist\ /s
 
-      # List the build directory for Linux
-      - name: List Linux build directory
-        if: matrix.os == 'ubuntu-latest'
-        run: ls -R dist/linux-unpacked || true
+      - name: List all files in dist directory (macOS/Linux)
+        if: matrix.os != 'windows-latest'
+        run: ls -R dist/ || true
