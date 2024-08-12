@@ -61,26 +61,26 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: authenticator_win_${{ env.version }}
-          path: build/SkedAuthenticator-${{ env.version }}.exe
+          name: authenticator_win_${{ env.version }}.exe
+          path: build/authenticator_${{ env.version }}
       
       - name: Upload macOS DMG
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: authenticator_mac_${{ env.version }}
-          path: build/authenticator_${{ env.version }}.app
+          name: authenticator_mac_${{ env.version }}.app
+          path: build/authenticator_${{ env.version }}
 
       - name: Upload Linux AppImage
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: authenticator_linuxAppImage_${{ env.version }}
-          path: build/SkedAuthenticator-${{ env.version }}.AppImage
+          name: authenticator_linuxAppImage_${{ env.version }}.AppImage
+          path: build/authenticator_${{ env.version }}
       
       - name: Upload Linux Snap Package
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: authenticator_linuxSnap_${{ env.version }}
-          path: build/authenticator_${{ env.version }}_amd64.snap
+          name: authenticator_linuxSnap_${{ env.version }}.snap
+          path: build/authenticator_${{ env.version }}
