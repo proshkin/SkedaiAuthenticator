@@ -29,8 +29,8 @@ jobs:
       - name: Get number of commits
         id: get_commits
         run: |
-          commits=$(git rev-list --count HEAD)
-          echo "commits=$commits" >> $GITHUB_ENV
+          $commits = git rev-list --count HEAD
+          echo "commits=$commits" >> $env:GITHUB_ENV
 
       - name: Set version number
         id: set_version
