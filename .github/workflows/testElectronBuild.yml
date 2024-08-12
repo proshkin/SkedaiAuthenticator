@@ -22,7 +22,7 @@ jobs:
       # For Windows: Use PowerShell syntax
       - name: Get number of commits (Windows)
         if: matrix.os == 'windows-latest'
-        id: get_commits
+        id: get_commits_windows
         run: |
           $commits = git rev-list --count HEAD
           echo "commits=$commits" >> $env:GITHUB_ENV
@@ -31,7 +31,7 @@ jobs:
       # For Linux and macOS: Use Bash syntax
       - name: Get number of commits (Linux/macOS)
         if: matrix.os != 'windows-latest'
-        id: get_commits
+        id: get_commits_unix
         run: |
           commits=$(git rev-list --count HEAD)
           echo "commits=$commits" >> $GITHUB_ENV
