@@ -24,6 +24,7 @@ jobs:
         run: |
           releases=$(curl -s -H "Authorization: token ${{ secrets.SKEDAI_ACTION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases?per_page=100" | jq -r '. | length')
           echo "releases=$releases" >> $GITHUB_ENV
+        shell: bash
 
       - name: Get number of commits
         id: get_commits
