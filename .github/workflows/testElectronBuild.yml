@@ -40,9 +40,10 @@ jobs:
       - name: Set version number
         id: set_version
         run: |
-          releases_number=$(( ${env.releases} + 1 ))
-          version="0.${releases_number}.${env.commits}"
+          releases_number=$((releases + 1))
+          version="0.${releases_number}.${commits}"
           echo "version=$version" >> $GITHUB_ENV
+        shell: bash
       
       - name: Update package.json with new version
         run: |
@@ -60,26 +61,26 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: SkedAuthenticator-${{ env.version }}-windows
+          name: authenticator_win_${{ env.version }}
           path: build/SkedAuthenticator-${{ env.version }}.exe
       
       - name: Upload macOS DMG
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: SkedAuthenticator-macos-dmg
+          name: authenticator_mac_${{ env.version }}
           path: build/SkedAuthenticator-${{ env.version }}-arm64.dmg
 
       - name: Upload Linux AppImage
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: SkedAuthenticator-linux-AppImage
+          name: authenticator_linuxAppImage_${{ env.version }}
           path: build/SkedAuthenticator-${{ env.version }}.AppImage
       
       - name: Upload Linux Snap Package
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: SkedAuthenticator-linux-snap
+          name: authenticator_linuxSnap_${{ env.version }}
           path: build/authenticator_${{ env.version }}_amd64.snap
