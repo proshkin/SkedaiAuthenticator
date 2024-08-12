@@ -69,12 +69,12 @@ jobs:
         run: |
           ls -R build
       
-      - name: Upload macOS DMG
+      - name: Upload macOS .app bundle
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: authenticator_mac_${{ env.version }}.app
-          path: build/authenticator_${{ env.version }}
+          name: authenticator_mac_${{ env.version }}_app
+          path: build/mac-arm64/authenticator_${{ env.version }}.app
 
       - name: Upload Linux AppImage
         if: matrix.os == 'ubuntu-latest'
