@@ -15,8 +15,8 @@
       "target": "portable"
     },
     "mac": {
-      "target": "dmg",
-      "artifactName": "authenticator_mac_${version}.dmg"
+      "target": ["dir"],
+      "artifactName": "authenticator_mac_${version}.${ext}"
     },
     "directories": {
       "output": "build"
