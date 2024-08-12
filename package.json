@@ -10,7 +10,7 @@
   },
   "build": {
     "appId": "com.authenticator.scheduler.skedai",
-    "productName": "SkedAuthenticator",
+    "productName": "authenticator_mac_${version}.${ext}",
     "win": {
       "target": "portable"
     },
