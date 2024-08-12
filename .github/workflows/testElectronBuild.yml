@@ -69,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: authenticator_mac_${{ env.version }}
-          path: build/authenticator_mac_${{ env.version }}.dmg
+          path: build/authenticator_mac_${{ env.version }}.app
 
       - name: Upload Linux AppImage
         if: matrix.os == 'ubuntu-latest'
