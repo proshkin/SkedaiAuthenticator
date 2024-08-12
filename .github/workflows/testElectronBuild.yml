@@ -19,21 +19,32 @@ jobs:
         with:
           node-version: '20.11.0'
 
-      - name: Get the number of tags (releases)
-        id: get_version
-        run: echo "::set-output name=release_count::$(git tag | wc -l)"
+      - name: Get number of releases
+        id: get_releases
+        run: |
+          releases=$(curl -s -H "Authorization: token ${{ secrets.SKEDAI_ACTION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases?per_page=100" | jq -r '. | length')
+          releases=$(echo $releases | xargs)
+          echo "releases=$releases" >> $GITHUB_ENV
 
-      - name: Get the number of commits
+      - name: Get number of commits
         id: get_commits
-        run: echo "::set-output name=commit_count::$(git rev-list --count HEAD)"
+        run: |
+          commits=$(git rev-list --count HEAD)
+          commits=$(echo $commits | xargs)
+          echo "commits=$commits" >> $GITHUB_ENV
 
       - name: Set version number
         id: set_version
-        run: echo "::set-output name=version::0.${{ steps.get_version.outputs.release_count }}.${{ steps.get_commits.outputs.commit_count }}"
-
+        run: |
+          releases_number=$(( ${{ env.releases }} + 1 ))
+          version="0.${releases_number}.${{ env.commits }}"
+          version=$(echo $version | xargs)
+          echo "version=$version"
+          echo "version=$version" >> $GITHUB_ENV
+      
       - name: Update package.json with new version
         run: |
-          npm version ${{ steps.set_version.outputs.version }} --no-git-tag-version
+          npm version ${{ version }} --no-git-tag-version
 
       - name: Install dependencies
         run: npm install
@@ -47,26 +58,26 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: SkedAuthenticator-${{ steps.set_version.outputs.version }}-windows
-          path: build/SkedAuthenticator-${{ steps.set_version.outputs.version }}.exe
+          name: SkedAuthenticator-${{ version }}-windows
+          path: build/SkedAuthenticator-${{ version }}.exe
       
       - name: Upload macOS DMG
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
           name: SkedAuthenticator-macos-dmg
-          path: build/SkedAuthenticator-${{ steps.set_version.outputs.version }}-arm64.dmg
+          path: build/SkedAuthenticator-${{ version }}-arm64.dmg
 
       - name: Upload Linux AppImage
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: SkedAuthenticator-linux-AppImage
-          path: build/SkedAuthenticator-${{ steps.set_version.outputs.version }}.AppImage
+          path: build/SkedAuthenticator-${{ version }}.AppImage
       
       - name: Upload Linux Snap Package
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: SkedAuthenticator-linux-snap
-          path: build/authenticator_${{ steps.set_version.outputs.version }}_amd64.snap
+          path: build/authenticator_${{ version }}_amd64.snap
