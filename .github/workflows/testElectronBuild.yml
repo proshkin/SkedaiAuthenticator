@@ -19,29 +19,34 @@ jobs:
         with:
           node-version: '20.11.0'
 
-      - name: Get number of releases
-        id: get_releases
-        run: |
-          releases=$(curl -s -H "Authorization: token ${{ secrets.SKEDAI_ACTION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases?per_page=100" | jq -r '. | length')
-          echo "releases=$releases" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Get number of commits
+      # For Windows: Use PowerShell syntax
+      - name: Get number of commits (Windows)
+        if: matrix.os == 'windows-latest'
         id: get_commits
         run: |
           $commits = git rev-list --count HEAD
           echo "commits=$commits" >> $env:GITHUB_ENV
+        shell: pwsh
+
+      # For Linux and macOS: Use Bash syntax
+      - name: Get number of commits (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        id: get_commits
+        run: |
+          commits=$(git rev-list --count HEAD)
+          echo "commits=$commits" >> $GITHUB_ENV
+        shell: bash
 
       - name: Set version number
         id: set_version
         run: |
-          releases_number=$(( ${releases} + 1 ))
-          version="0.${releases_number}.${commits}"
+          releases_number=$(( ${env.releases} + 1 ))
+          version="0.${releases_number}.${env.commits}"
           echo "version=$version" >> $GITHUB_ENV
       
       - name: Update package.json with new version
         run: |
-          npm version $version --no-git-tag-version
+          npm version $env:version --no-git-tag-version
 
       - name: Install dependencies
         run: npm install
