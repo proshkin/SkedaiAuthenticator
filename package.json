@@ -16,7 +16,7 @@
     },
     "mac": {
       "target": ["dir"],
-      "artifactName": "authenticator_mac_${version}.${ext}"
+      "artifactName": "authenticator_mac_${version}.app"
     },
     "directories": {
       "output": "build"
