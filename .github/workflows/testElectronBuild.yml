@@ -63,6 +63,11 @@ jobs:
         with:
           name: authenticator_win_${{ env.version }}.exe
           path: build/authenticator_${{ env.version }}
+
+      - name: List build directory contents
+        if: matrix.os == 'macos-latest'
+        run: |
+          ls -R build
       
       - name: Upload macOS DMG
         if: matrix.os == 'macos-latest'
