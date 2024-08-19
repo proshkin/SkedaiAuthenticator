@@ -45,16 +45,17 @@ jobs:
           echo "version=$version" >> $GITHUB_ENV
         shell: bash
       
-      - name: Set BUILD_VERSION environment variable
-        run: echo "BUILD_VERSION=${{ env.version }}" >> $GITHUB_ENV
+      - name: Update productName and artifactName in package.json
+        run: |
+          version="${{ env.version }}"
+          sed -i "s/authenticator_\${version}/authenticator_${version}/g" package.json
+          sed -i "s/\${version}/${version}/g" package.json
       
       - name: Install dependencies
         run: npm install
       
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
-        env:
-          BUILD_VERSION: ${{ env.version }}
         with:
           github_token: ${{ secrets.github_token }}
 
