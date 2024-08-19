@@ -45,15 +45,16 @@ jobs:
           echo "version=$version" >> $GITHUB_ENV
         shell: bash
       
-      - name: Update package.json with new version
-        run: |
-          npm version ${{ env.version }} --no-git-tag-version
-
+      - name: Set BUILD_VERSION environment variable
+        run: echo "BUILD_VERSION=${{ env.version }}" >> $GITHUB_ENV
+      
       - name: Install dependencies
         run: npm install
-
+      
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
+        env:
+          BUILD_VERSION: ${{ env.version }}
         with:
           github_token: ${{ secrets.github_token }}
 
