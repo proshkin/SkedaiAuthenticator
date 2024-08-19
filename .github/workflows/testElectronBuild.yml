@@ -19,41 +19,30 @@ jobs:
         with:
           node-version: '20.11.0'
 
-      # For Windows: Use PowerShell syntax
-      - name: Get number of commits (Windows)
-        if: matrix.os == 'windows-latest'
-        id: get_commits_windows
-        run: |
-          $commits = git rev-list --count HEAD
-          echo "commits=$commits" >> $env:GITHUB_ENV
-        shell: pwsh
-
-      # For Linux and macOS: Use Bash syntax
-      - name: Get number of commits (Linux/macOS)
-        if: matrix.os != 'windows-latest'
-        id: get_commits_unix
-        run: |
-          commits=$(git rev-list --count HEAD)
-          echo "commits=$commits" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Set version number
-        id: set_version
-        run: |
-          releases_number=$((releases + 1))
-          version="0.${releases_number}.${commits}"
-          echo "version=$version" >> $GITHUB_ENV
-        shell: bash
-      
-      - name: Update productName and artifactName in package.json
+      - name: Update productName and artifactName in package.json (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           version="${{ env.version }}"
-          sed -i '' "s/authenticator_\\${version}/authenticator_${version}/g" package.json
-          sed -i '' "s/\\${version}/${version}/g" package.json
-      
+          sed -i "s/authenticator_\\\${version}/authenticator_${version}/g" package.json
+          sed -i "s/\\\${version}/${version}/g" package.json
+
+      - name: Update productName and artifactName in package.json (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          version="${{ env.version }}"
+          sed -i '' "s/authenticator_\\\${version}/authenticator_${version}/g" package.json
+          sed -i '' "s/\\\${version}/${version}/g" package.json
+
+      - name: Update productName and artifactName in package.json (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          $version="${{ env.version }}"
+          (Get-Content package.json) -replace 'authenticator_\${version}', "authenticator_$version" -replace '\${version}', "$version" | Set-Content package.json
+        shell: pwsh
+
       - name: Install dependencies
         run: npm install
-      
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
