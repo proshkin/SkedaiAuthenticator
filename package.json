@@ -10,13 +10,13 @@
   },
   "build": {
     "appId": "com.authenticator.scheduler.skedai",
-    "productName": "authenticator_${version}",
+    "productName": "authenticator_${BUILD_VERSION}",
     "win": {
       "target": "portable"
     },
     "mac": {
       "target": ["dir"],
-      "artifactName": "authenticator_mac_${version}.app"
+      "artifactName": "authenticator_mac_${BUILD_VERSION}.${ext}"
     },
     "directories": {
       "output": "build"
