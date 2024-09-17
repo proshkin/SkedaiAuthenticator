@@ -7,57 +7,76 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        platform: [linux, mac, win]
+        os: [macos-latest, windows-latest]
+        platform: [mac, win]
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: Read Config File
-      id: read_config
-      run: |
-        import json
-        with open('config.txt') as f:
-          config = json.load(f)
-        print(f"::set-output name=is_release::{config.get('is_release', 'false')}")
-        print(f"::set-output name=is_prerelease::{config.get('is_prerelease', 'false')}")
-
-    - name: Setup Node.js
+    - name: Install Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16'
+        cache: 'npm'
 
     - name: Install Dependencies
       run: npm install
 
-    - name: Build Application
+    - name: Install jq
+      if: runner.os == 'Windows'
+      run: choco install jq
+
+    - name: Read Config File
+      id: read_config
+      shell: bash
       run: |
-        # For Electron apps
-        npm run build -- --platform=${{ matrix.platform }}
-        # For Node.js apps using pkg
-        npx pkg . --targets node16-${{ matrix.platform }} --output dist/app
+        echo "Reading config.txt"
+        CONFIG_CONTENT=$(cat config.txt)
+        IS_RELEASE=$(echo "$CONFIG_CONTENT" | jq -r '.is_release')
+        IS_PRERELEASE=$(echo "$CONFIG_CONTENT" | jq -r '.is_prerelease')
+        echo "::set-output name=is_release::$IS_RELEASE"
+        echo "::set-output name=is_prerelease::$IS_PRERELEASE"
 
     - name: Calculate Version
       id: calc_version
+      shell: bash
       run: |
-        releases=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | jq length)
-        commits=$(git rev-list --count HEAD)
-        version="0.${releases}.${commits}"
-        echo "::set-output name=version::$version"
+        RELEASE_COUNT=$(git tag --list | wc -l | xargs)
+        COMMIT_COUNT=$(git rev-list --count HEAD)
+        VERSION="0.${RELEASE_COUNT}.${COMMIT_COUNT}"
+        echo "Calculated version: $VERSION"
+        echo "::set-output name=version::$VERSION"
 
-    - name: Name Executable
+    - name: Build Application
+      env:
+        BUILD_PLATFORM: ${{ matrix.platform }}
+        BUILD_VERSION: ${{ steps.calc_version.outputs.version }}
       run: |
-        FILE_NAME="app_${{ matrix.platform }}_${{ steps.calc_version.outputs.version }}"
-        # Rename the built executable accordingly
+        echo "Building for platform: $BUILD_PLATFORM"
+        npm run build
+
+    - name: Rename Executable
+      run: |
+        if [ "${{ matrix.platform }}" == "win" ]; then
+          EXT="exe"
+          FILE=$(find dist -name "*.exe" | head -n 1)
+        else
+          EXT="zip"
+          FILE=$(find dist -name "*.zip" | head -n 1)
+        fi
+        FILE_NAME="authenticator_${{ matrix.platform }}_${{ steps.calc_version.outputs.version }}.$EXT"
+        mv "$FILE" "dist/$FILE_NAME"
 
     - name: Upload Artifact
       if: steps.read_config.outputs.is_release == 'false'
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.FILE_NAME }}
+        name: ${{ steps.calc_version.outputs.version }}
         path: dist/*
 
     - name: Create Release
       if: steps.read_config.outputs.is_release == 'true'
+      id: create_release
       uses: actions/create-release@v1
       with:
         tag_name: v${{ steps.calc_version.outputs.version }}
@@ -71,5 +90,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/*
-        asset_name: ${{ env.FILE_NAME }}
+        asset_name: authenticator_${{ matrix.platform }}_${{ steps.calc_version.outputs.version }}.${{ matrix.platform == 'win' && 'exe' || 'zip' }}
         asset_content_type: application/octet-stream
