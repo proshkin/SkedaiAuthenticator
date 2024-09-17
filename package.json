@@ -1,43 +1,41 @@
 {
-  "name": "skedai-authenticator",
-  "version": "1.0.0",
-  "description": "Skedai Authenticator Electron App",
-  "main": "authenticator.js",
-  "scripts": {
-    "start": "electron .",
-    "build": "cross-env BUILD_PLATFORM=$BUILD_PLATFORM BUILD_VERSION=$BUILD_VERSION electron-builder --$BUILD_PLATFORM --config.extraMetadata.version=$BUILD_VERSION"
-  },
-  "author": "Your Name",
-  "license": "MIT",
-  "dependencies": {
-    "electron": "^23.0.0"
-  },
-  "devDependencies": {
-    "electron-builder": "^23.6.0",
-    "cross-env": "^7.0.3"
-  },
-  "build": {
-    "appId": "com.skedai.authenticator",
-    "productName": "Skedai Authenticator",
-    "directories": {
-      "output": "dist"
+    "name": "skedai-authenticator",
+    "version": "1.0.0",
+    "description": "Skedai Authenticator Electron App",
+    "main": "authenticator.js",
+    "scripts": {
+      "start": "electron .",
+      "build": "cross-env BUILD_PLATFORM=$BUILD_PLATFORM BUILD_VERSION=$BUILD_VERSION electron-builder --$BUILD_PLATFORM --config.extraMetadata.version=$BUILD_VERSION"
     },
-    "files": [
-      "**/*",
-      "!dist/**/*"
-    ],
-    "mac": {
-      "category": "public.app-category.utilities",
-      "target": [
-        "dir",
-        "zip"
+    "author": "Your Name",
+    "license": "MIT",
+    "devDependencies": {
+      "electron": "^23.0.0",
+      "electron-builder": "^23.6.0",
+      "cross-env": "^7.0.3"
+    },
+    "build": {
+      "appId": "com.skedai.authenticator",
+      "productName": "Skedai Authenticator",
+      "directories": {
+        "output": "dist"
+      },
+      "files": [
+        "**/*",
+        "!dist/**/*"
       ],
-      "hardenedRuntime": false
-    },
-    "win": {
-      "target": [
-        "portable"
-      ]
+      "mac": {
+        "category": "public.app-category.utilities",
+        "target": [
+          "dir",
+          "zip"
+        ],
+        "hardenedRuntime": false
+      },
+      "win": {
+        "target": [
+          "portable"
+        ]
+      }
     }
   }
-}
