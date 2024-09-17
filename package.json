@@ -1,35 +1,43 @@
 {
-  "name": "authenticator",
-  "version": "0.0.1",
+  "name": "skedai-authenticator",
+  "version": "1.0.0",
+  "description": "Skedai Authenticator Electron App",
   "main": "authenticator.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "release": "electron-builder"
+    "build": "cross-env BUILD_PLATFORM=$BUILD_PLATFORM BUILD_VERSION=$BUILD_VERSION electron-builder --$BUILD_PLATFORM --config.extraMetadata.version=$BUILD_VERSION"
   },
-  "build": {
-    "build": "electron-builder --${platform} --config.extraMetadata.version=${version}"
-    "appId": "com.authenticator.scheduler.skedai",
-    "productName": "authenticator_${version}",
-    "win": {
-      "target": "portable"
-    },
-    "mac": {
-      "target": ["dir"],
-      "artifactName": "authenticator_mac_${version}.app"
-    },
-    "directories": {
-      "output": "build"
-    }
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^23.0.0"
   },
   "devDependencies": {
-    "electron": "^27.0.2",
-    "electron-builder": "^24.6.4"
+    "electron-builder": "^23.6.0",
+    "cross-env": "^7.0.3"
   },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.38.4",
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7"
+  "build": {
+    "appId": "com.skedai.authenticator",
+    "productName": "Skedai Authenticator",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dir",
+        "zip"
+      ],
+      "hardenedRuntime": false
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
   }
 }
