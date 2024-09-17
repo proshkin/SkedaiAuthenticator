@@ -17,7 +17,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '16'
-        cache: 'npm'
 
     - name: Install Dependencies
       run: npm install
@@ -49,11 +48,10 @@ jobs:
 
     - name: Build Application
       env:
-        BUILD_PLATFORM: ${{ matrix.platform }}
         BUILD_VERSION: ${{ steps.calc_version.outputs.version }}
       run: |
-        echo "Building for platform: $BUILD_PLATFORM"
-        npm run build
+        echo "Building for platform: ${{ matrix.platform }}"
+        npm run build -- --${{ matrix.platform }}
 
     - name: Rename Executable
       run: |
