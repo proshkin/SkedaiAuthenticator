@@ -36,6 +36,9 @@
         "target": [
           "portable"
         ]
+      },
+      "extraMetadata": {
+        "version": "${env.BUILD_VERSION}"
       }
     }
   }
