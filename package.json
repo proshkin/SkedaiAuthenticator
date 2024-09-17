@@ -37,6 +37,7 @@
           "portable"
         ]
       },
+      "publish": "never",
       "extraMetadata": {
         "version": "${env.BUILD_VERSION}"
       }
