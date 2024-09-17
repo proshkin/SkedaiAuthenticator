@@ -1,0 +1,75 @@
+name: Build and Release
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [linux, mac, win]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Read Config File
+      id: read_config
+      run: |
+        import json
+        with open('config.txt') as f:
+          config = json.load(f)
+        print(f"::set-output name=is_release::{config.get('is_release', 'false')}")
+        print(f"::set-output name=is_prerelease::{config.get('is_prerelease', 'false')}")
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build Application
+      run: |
+        # For Electron apps
+        npm run build -- --platform=${{ matrix.platform }}
+        # For Node.js apps using pkg
+        npx pkg . --targets node16-${{ matrix.platform }} --output dist/app
+
+    - name: Calculate Version
+      id: calc_version
+      run: |
+        releases=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | jq length)
+        commits=$(git rev-list --count HEAD)
+        version="0.${releases}.${commits}"
+        echo "::set-output name=version::$version"
+
+    - name: Name Executable
+      run: |
+        FILE_NAME="app_${{ matrix.platform }}_${{ steps.calc_version.outputs.version }}"
+        # Rename the built executable accordingly
+
+    - name: Upload Artifact
+      if: steps.read_config.outputs.is_release == 'false'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.FILE_NAME }}
+        path: dist/*
+
+    - name: Create Release
+      if: steps.read_config.outputs.is_release == 'true'
+      uses: actions/create-release@v1
+      with:
+        tag_name: v${{ steps.calc_version.outputs.version }}
+        release_name: Release ${{ steps.calc_version.outputs.version }}
+        prerelease: ${{ steps.read_config.outputs.is_prerelease }}
+        draft: false
+
+    - name: Upload Release Asset
+      if: steps.read_config.outputs.is_release == 'true'
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/*
+        asset_name: ${{ env.FILE_NAME }}
+        asset_content_type: application/octet-stream
