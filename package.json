@@ -1,45 +1,47 @@
 {
-    "name": "skedai-authenticator",
-    "version": "1.0.0",
-    "description": "Skedai Authenticator Electron App",
-    "main": "authenticator.js",
-    "scripts": {
-      "start": "electron .",
-      "build": "cross-env BUILD_PLATFORM=$BUILD_PLATFORM BUILD_VERSION=$BUILD_VERSION electron-builder --$BUILD_PLATFORM --config.extraMetadata.version=$BUILD_VERSION"
+  "name": "skedai-authenticator",
+  "version": "1.0.0",
+  "description": "Skedai Authenticator Electron App",
+  "main": "authenticator.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder $*"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^23.0.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^23.6.0",
+    "cross-env": "^7.0.3"
+  },
+  "build": {
+    "appId": "com.skedai.authenticator",
+    "productName": "Skedai Authenticator",
+    "directories": {
+      "output": "dist"
     },
-    "author": "Your Name",
-    "license": "MIT",
-    "devDependencies": {
-      "electron": "^23.0.0",
-      "electron-builder": "^23.6.0",
-      "cross-env": "^7.0.3"
-    },
-    "build": {
-      "appId": "com.skedai.authenticator",
-      "productName": "Skedai Authenticator",
-      "directories": {
-        "output": "dist"
-      },
-      "files": [
-        "**/*",
-        "!dist/**/*"
+    "files": [
+      "**/*",
+      "!dist/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dir",
+        "zip"
       ],
-      "mac": {
-        "category": "public.app-category.utilities",
-        "target": [
-          "dir",
-          "zip"
-        ],
-        "hardenedRuntime": false
-      },
-      "win": {
-        "target": [
-          "portable"
-        ]
-      },
-      "publish": "never",
-      "extraMetadata": {
-        "version": "${env.BUILD_VERSION}"
-      }
+      "hardenedRuntime": false
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "publish": null,
+    "extraMetadata": {
+      "version": "${env.BUILD_VERSION}"
     }
   }
+}
