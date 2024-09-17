@@ -9,6 +9,7 @@
     "release": "electron-builder"
   },
   "build": {
+    "build": "electron-builder --${platform} --config.extraMetadata.version=${version}"
     "appId": "com.authenticator.scheduler.skedai",
     "productName": "authenticator_${version}",
     "win": {
